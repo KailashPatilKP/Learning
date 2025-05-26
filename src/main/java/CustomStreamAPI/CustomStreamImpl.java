@@ -3,6 +3,7 @@ package CustomStreamAPI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 public class CustomStreamImpl<T> implements CustomStream<T> {
     private final List<T> elements;
@@ -19,5 +20,16 @@ public class CustomStreamImpl<T> implements CustomStream<T> {
             accumulator.accept(container, element);
         }
         return (R) collector.finisher().apply(container);
+    }
+
+    @Override
+    public CustomStream<T> filter(Predicate<? super T> predicate) {
+        List<T> filteredElements = new ArrayList<>();
+        for(T element : elements) {
+            if(predicate.test(element)) {
+                filteredElements.add(element);
+            }
+        }
+        return new CustomStreamImpl<>(filteredElements);
     }
 }

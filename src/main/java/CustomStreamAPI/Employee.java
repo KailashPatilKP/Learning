@@ -39,7 +39,9 @@ public class Employee {
 
         long startTime = System.nanoTime();
         //Use Java Streams API to get the total Salary per department.
-        Map<Integer, Double> streamResult = empList.stream().collect(Collectors.groupingBy(e -> e.departmentId,
+        Map<Integer, Double> streamResult = empList.stream()
+                .filter(e -> e.name.length() > 4)
+                .collect(Collectors.groupingBy(e -> e.departmentId,
                 Collectors.summingDouble(e -> e.salary)));
         long standardStreamTime = System.nanoTime() - startTime;
 
@@ -47,6 +49,7 @@ public class Employee {
 
         startTime = System.nanoTime();
         Map<Integer, Double> customStreamResult = CustomStream.of(empList)
+                .filter(e -> e.name.length() > 4)
                 .collect(CustomCollectors.groupingBy(
                         Employee::getDepartmentId,
                         Employee::getSalary
